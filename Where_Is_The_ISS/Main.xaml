@@ -1,17 +1,16 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main1" this:Main1.stateName="Mississippi" this:Main1.cityName="Biloxi" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:this="clr-namespace:" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="ISS_Sightings" Type="OutArgument(sd:DataTable)" />
-    <x:Property Name="Users_Country" Type="InArgument(x:String)" />
-    <x:Property Name="Users_State" Type="InArgument(x:String)" />
-    <x:Property Name="Users_City" Type="InArgument(x:String)" />
+    <x:Property Name="stateName" Type="InArgument(x:String)" />
+    <x:Property Name="cityName" Type="InArgument(x:String)" />
+    <x:Property Name="SightingsList" Type="OutArgument(scg:List(x:String))" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>711,1453</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>711,1898</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Main1_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
-    <scg:List x:TypeArguments="x:String" Capacity="42">
+    <scg:List x:TypeArguments="x:String" Capacity="58">
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
       <x:String>System.Activities.Expressions</x:String>
@@ -37,10 +36,15 @@
       <x:String>System.ComponentModel</x:String>
       <x:String>System.Runtime.Serialization</x:String>
       <x:String>System.Xml.Serialization</x:String>
+      <x:String>UiPath.DataTableUtilities</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.Runtime.InteropServices</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
-    <scg:List x:TypeArguments="AssemblyReference" Capacity="32">
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="21">
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
@@ -60,18 +64,29 @@
       <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
       <AssemblyReference>UiPath.UIAutomationNext</AssemblyReference>
       <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.Reflection.Metadata</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="696,1288" sap2010:WorkflowViewState.IdRef="Sequence_11">
+  <Sequence sap:VirtualizedContainerService.HintSize="696,1921" sap2010:WorkflowViewState.IdRef="Sequence_11">
     <Sequence.Variables>
-      <Variable x:TypeArguments="sd:DataTable" Name="issSightingsDT" />
       <Variable x:TypeArguments="sd:DataTable" Name="CYGNUSSightingsDT" />
+      <Variable x:TypeArguments="sd:DataTable" Name="issSightings_DT" />
+      <Variable x:TypeArguments="x:String" Default="United States" Name="country" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
+    <Assign sap:VirtualizedContainerService.HintSize="654,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="scg:List(x:String)">[SightingsList]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="scg:List(x:String)">[new List(of String)]</InArgument>
+      </Assign.Value>
+    </Assign>
     <Flowchart DisplayName="Navigate to Website and Input User's Location" sap:VirtualizedContainerService.HintSize="654,636" sap2010:WorkflowViewState.IdRef="Flowchart_1">
       <Flowchart.Variables>
         <Variable x:TypeArguments="x:Boolean" Name="chromeOpen" />
@@ -113,7 +128,7 @@
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 <av:Point x:Key="ShapeLocation">250.4,216.4</av:Point>
                 <av:Size x:Key="ShapeSize">93,87</av:Size>
-                <av:PointCollection x:Key="FalseConnector">343.4,259.9 460,259.9 460,283.6</av:PointCollection>
+                <av:PointCollection x:Key="FalseConnector">343.4,259.9 460,259.9 460,294</av:PointCollection>
                 <av:PointCollection x:Key="TrueConnector">250.4,260 130,260 130,284.02</av:PointCollection>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
@@ -125,7 +140,7 @@
                     <av:Size x:Key="ShapeSize">200,52</av:Size>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Attach Browser 'chrome.exe Spot'" sap:VirtualizedContainerService.HintSize="510,1463" sap2010:WorkflowViewState.IdRef="BrowserScope_1" InformativeScreenshot="913188063260ccd8f7056ebfc593d072" Selector="&lt;html app='chrome.exe' /&gt;">
+                <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Attach Browser 'chrome.exe Spot'" sap:VirtualizedContainerService.HintSize="200,52" sap2010:WorkflowViewState.IdRef="BrowserScope_1" InformativeScreenshot="913188063260ccd8f7056ebfc593d072" Selector="&lt;html app='chrome.exe' /&gt;">
                   <ui:BrowserScope.Body>
                     <ActivityAction x:TypeArguments="x:Object">
                       <ActivityAction.Argument>
@@ -168,7 +183,7 @@
                                   </ui:Target>
                                 </ui:Click.Target>
                               </ui:Click>
-                              <ui:SetWebAttribute ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Attribute="selecteditem" DisplayName="Set Web Attribute 'Users Country'" sap:VirtualizedContainerService.HintSize="334,162" sap2010:WorkflowViewState.IdRef="SetWebAttribute_7" Value="United States">
+                              <ui:SetWebAttribute ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Attribute="selecteditem" DisplayName="Set Web Attribute 'Users Country'" sap:VirtualizedContainerService.HintSize="334,162" sap2010:WorkflowViewState.IdRef="SetWebAttribute_7" Value="[country]">
                                 <ui:SetWebAttribute.Target>
                                   <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="30c45b97-3a4e-447c-a6f6-ae92ed814c9f" InformativeScreenshot="32a94c4e71ac6315e39ece6913cba2cd" Selector="&lt;webctrl id='select01' tag='SELECT' /&gt;">
                                     <ui:Target.TimeoutMS>
@@ -180,7 +195,7 @@
                                   </ui:Target>
                                 </ui:SetWebAttribute.Target>
                               </ui:SetWebAttribute>
-                              <ui:SetWebAttribute ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Attribute="selecteditem" DisplayName="Set Web Attribute 'Users State or Region'" sap:VirtualizedContainerService.HintSize="334,162" sap2010:WorkflowViewState.IdRef="SetWebAttribute_8" Value="Mississippi">
+                              <ui:SetWebAttribute ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Attribute="selecteditem" DisplayName="Set Web Attribute 'Users State or Region'" sap:VirtualizedContainerService.HintSize="334,162" sap2010:WorkflowViewState.IdRef="SetWebAttribute_8" Value="[stateName]">
                                 <ui:SetWebAttribute.Target>
                                   <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="ddcdbe22-6f22-456b-be6c-b14d879c672b" InformativeScreenshot="cbb9d722090067a4ee50ea00f636f7dd" Selector="&lt;webctrl tag='SELECT' name='region' /&gt;">
                                     <ui:Target.TimeoutMS>
@@ -192,7 +207,7 @@
                                   </ui:Target>
                                 </ui:SetWebAttribute.Target>
                               </ui:SetWebAttribute>
-                              <ui:SetWebAttribute ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Attribute="selecteditem" DisplayName="Set Web Attribute 'User's City'" sap:VirtualizedContainerService.HintSize="334,162" sap2010:WorkflowViewState.IdRef="SetWebAttribute_9" Value="Biloxi">
+                              <ui:SetWebAttribute ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Attribute="selecteditem" DisplayName="Set Web Attribute 'User's City'" sap:VirtualizedContainerService.HintSize="334,162" sap2010:WorkflowViewState.IdRef="SetWebAttribute_9" Value="[cityName]">
                                 <ui:SetWebAttribute.Target>
                                   <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="01ca75fe-04f0-4df6-b33f-a7eee3fe6118" InformativeScreenshot="0e5526d04a2a77e9fe7d9c9ce29079f6" Selector="&lt;webctrl tag='SELECT' aaname='City' class='form-control' /&gt;">
                                     <ui:Target.TimeoutMS>
@@ -251,12 +266,12 @@
               <FlowStep x:Name="__ReferenceID2">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                    <av:Point x:Key="ShapeLocation">360,283.6</av:Point>
+                    <av:Point x:Key="ShapeLocation">360,294</av:Point>
                     <av:Size x:Key="ShapeSize">200,52</av:Size>
-                    <av:PointCollection x:Key="ConnectorLocation">460,336.4 460,366.4 130,366.4 130,336.82</av:PointCollection>
+                    <av:PointCollection x:Key="ConnectorLocation">360,320 330,320 330,310.02 230,310.02</av:PointCollection>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:OpenBrowser Hidden="{x:Null}" NewSession="{x:Null}" Private="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" CommunicationMethod="WebDriver" DisplayName="Open Browser: Chrome" sap:VirtualizedContainerService.HintSize="200,52" sap2010:WorkflowViewState.IdRef="OpenBrowser_4">
+                <ui:OpenBrowser Hidden="{x:Null}" NewSession="{x:Null}" Private="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" CommunicationMethod="WebDriver" DisplayName="Open Browser: Chrome" sap:VirtualizedContainerService.HintSize="200,52" sap2010:WorkflowViewState.IdRef="OpenBrowser_4" Url="www.google.com">
                   <ui:OpenBrowser.Body>
                     <ActivityAction x:TypeArguments="x:Object">
                       <ActivityAction.Argument>
@@ -264,11 +279,6 @@
                       </ActivityAction.Argument>
                     </ActivityAction>
                   </ui:OpenBrowser.Body>
-                  <ui:OpenBrowser.Url>
-                    <InArgument x:TypeArguments="x:String">
-                      <Literal x:TypeArguments="x:String" Value="" />
-                    </InArgument>
-                  </ui:OpenBrowser.Url>
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -288,41 +298,85 @@
       <x:Reference>__ReferenceID0</x:Reference>
       <x:Reference>__ReferenceID2</x:Reference>
     </Flowchart>
-    <ui:OnUiElementAppear ContinueOnError="{x:Null}" FoundElement="{x:Null}" WaitActive="{x:Null}" WaitVisible="{x:Null}" DisplayName="On Element Appear 'Sighting Location'" sap:VirtualizedContainerService.HintSize="654,520" sap2010:WorkflowViewState.IdRef="OnUiElementAppear_4" RepeatForever="False">
+    <ui:OnUiElementAppear ContinueOnError="{x:Null}" FoundElement="{x:Null}" WaitActive="{x:Null}" WaitVisible="{x:Null}" DisplayName="On Element Appear 'Sighting Location'" sap:VirtualizedContainerService.HintSize="654,466" sap2010:WorkflowViewState.IdRef="OnUiElementAppear_4" RepeatForever="False">
       <ui:OnUiElementAppear.Body>
-        <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="376,344" sap2010:WorkflowViewState.IdRef="Sequence_10">
+        <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="376,290" sap2010:WorkflowViewState.IdRef="Sequence_10">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:ExtractData DelayBetweenPagesMS="{x:Null}" NextLinkSelector="{x:Null}" ContinueOnError="True" DataTable="[ISS_Sightings]" DisplayName="Extract ISS Sightings" ExtractMetadata="&lt;extract-table get_columns_name='1' get_empty_columns='1' columns_name_source='Longest' /&gt;" sap:VirtualizedContainerService.HintSize="334,106" sap2010:WorkflowViewState.IdRef="ExtractData_1" MaxNumberOfResults="0" SimulateClick="True">
+          <ui:ExtractData DelayBetweenPagesMS="{x:Null}" NextLinkSelector="{x:Null}" ContinueOnError="True" DataTable="[IssSightings_DT]" DisplayName="Extract ISS Sightings" ExtractMetadata="&lt;extract-table get_columns_name='1' get_empty_columns='1' columns_name_source='Longest'&gt;&lt;column name='Date' attr='text' /&gt;&lt;column name='Visible' attr='text' /&gt;&lt;column name='Max Height*' attr='text' /&gt;&lt;column name='Appears' attr='text' /&gt;&lt;column name='Disappears' attr='text' /&gt;&lt;column name='Share Event' attr='text' /&gt;&lt;/extract-table&gt;" sap:VirtualizedContainerService.HintSize="334,106" sap2010:WorkflowViewState.IdRef="ExtractData_3" MaxNumberOfResults="100" SimulateClick="True">
             <ui:ExtractData.Target>
-              <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="bc8b692a-8cbb-4481-9f1b-5ada42c1fdb1" InformativeScreenshot="fb1bdd685715c6ae2a17e08e69fda136" Selector="&lt;webctrl idx='1' tag='TABLE' /&gt;" WaitForReady="COMPLETE">
+              <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="a4f3fa9b-5964-43b4-bdf0-d21540f7475b" InformativeScreenshot="13989c655e7eec43fda1de4b8dabff5f" Selector="&lt;html app='chrome.exe' title='* | Sighting Opportunity | Spot*' /&gt;&lt;webctrl tag='TABLE' /&gt;" WaitForReady="COMPLETE">
                 <ui:Target.TimeoutMS>
                   <InArgument x:TypeArguments="x:Int32" />
                 </ui:Target.TimeoutMS>
               </ui:Target>
             </ui:ExtractData.Target>
           </ui:ExtractData>
-          <ui:ExtractData DelayBetweenPagesMS="{x:Null}" NextLinkSelector="{x:Null}" ContinueOnError="True" DataTable="[CYGNUSSightingsDT]" DisplayName="Extract CYGNUS Sightings" ExtractMetadata="&lt;extract-table get_columns_name='1' get_empty_columns='1' columns_name_source='Longest' /&gt;" sap:VirtualizedContainerService.HintSize="334,106" sap2010:WorkflowViewState.IdRef="ExtractData_2" MaxNumberOfResults="0" SimulateClick="True">
-            <ui:ExtractData.Target>
-              <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="4c4104ce-8def-4e8f-b9f8-c639d6abc466" InformativeScreenshot="fa546ddcf93be10f5dbdb4050c40f42a" Selector="&lt;webctrl idx='2' tag='TABLE' /&gt;" WaitForReady="COMPLETE">
-                <ui:Target.TimeoutMS>
-                  <InArgument x:TypeArguments="x:Int32" />
-                </ui:Target.TimeoutMS>
-              </ui:Target>
-            </ui:ExtractData.Target>
-          </ui:ExtractData>
+          <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="334,52" sap2010:WorkflowViewState.IdRef="CommentOut_1">
+            <ui:CommentOut.Body>
+              <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="376,198" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:ExtractData DelayBetweenPagesMS="{x:Null}" NextLinkSelector="{x:Null}" ContinueOnError="True" DataTable="[issSightings_DT]" DisplayName="Extract ISS Sightings" ExtractMetadata="&lt;extract-table get_columns_name='1' get_empty_columns='1' columns_name_source='Longest' /&gt;" sap:VirtualizedContainerService.HintSize="334,106" sap2010:WorkflowViewState.IdRef="ExtractData_1" MaxNumberOfResults="0" SimulateClick="True">
+                  <ui:ExtractData.Target>
+                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="bc8b692a-8cbb-4481-9f1b-5ada42c1fdb1" InformativeScreenshot="fb1bdd685715c6ae2a17e08e69fda136" Selector="&lt;webctrl idx='1' tag='TABLE' /&gt;" WaitForReady="COMPLETE">
+                      <ui:Target.TimeoutMS>
+                        <InArgument x:TypeArguments="x:Int32" />
+                      </ui:Target.TimeoutMS>
+                    </ui:Target>
+                  </ui:ExtractData.Target>
+                </ui:ExtractData>
+              </Sequence>
+            </ui:CommentOut.Body>
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+          </ui:CommentOut>
         </Sequence>
       </ui:OnUiElementAppear.Body>
       <ui:OnUiElementAppear.Target>
-        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="8effb710-5653-488e-9a34-a9f71cbb015c" InformativeScreenshot="acb55b4a41d31c4cb86e9e9d83883b92" Selector="&lt;html app='chrome.exe' title='Biloxi, Mississippi, United States | Sighting Opportunity | Spot*' /&gt;&lt;webctrl parentid='content' tag='SPAN' aaname='Location:*' /&gt;" WaitForReady="COMPLETE">
+        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="8effb710-5653-488e-9a34-a9f71cbb015c" InformativeScreenshot="acb55b4a41d31c4cb86e9e9d83883b92" Selector="&lt;html app='chrome.exe' title='* | Sighting Opportunity | Spot*' /&gt;&lt;webctrl parentid='content' tag='SPAN' aaname='Location:*' /&gt;" WaitForReady="COMPLETE">
           <ui:Target.TimeoutMS>
             <InArgument x:TypeArguments="x:Int32" />
           </ui:Target.TimeoutMS>
         </ui:Target>
       </ui:OnUiElementAppear.Target>
     </ui:OnUiElementAppear>
+    <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" ColumnCount="5" DataTable="[issSightings_DT]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="654,197" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+      <ui:ForEachRow.Body>
+        <ActivityAction x:TypeArguments="sd:DataRow">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="CurrentRow" />
+          </ActivityAction.Argument>
+          <AddToCollection x:TypeArguments="x:String" Collection="[SightingsList]" DisplayName="Add To Collection" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="AddToCollection`1_1" Item="[&quot;Date: &quot;+CurrentRow.Item(0).ToString + &quot; Visible: &quot;+CurrentRow.Item(1).ToString + &quot; Max Height*: &quot; +CurrentRow.Item(2).ToString + &quot; Appears: &quot; +CurrentRow.Item(3).ToString + &quot; Disappears: &quot; +CurrentRow.Item(4).ToString]" />
+        </ActivityAction>
+      </ui:ForEachRow.Body>
+    </ui:ForEachRow>
+    <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each" sap:VirtualizedContainerService.HintSize="654,310" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[SightingsList]">
+      <ui:ForEach.Body>
+        <ActivityAction x:TypeArguments="x:String">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="x:String" Name="item" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="376,185" sap2010:WorkflowViewState.IdRef="Sequence_12">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,93" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[item]" />
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEach.Body>
+    </ui:ForEach>
   </Sequence>
 </Activity>
